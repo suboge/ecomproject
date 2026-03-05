@@ -9,7 +9,6 @@ import com.popo.springecom.model.dto.OrderRequest;
 import com.popo.springecom.model.dto.OrderResponse;
 import com.popo.springecom.repo.OrderRepo;
 import com.popo.springecom.repo.ProductRepo;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class OrderServer {
+public class OrderService {
 
     @Autowired
     private ProductRepo productRepo;
