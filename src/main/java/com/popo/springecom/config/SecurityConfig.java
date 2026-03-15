@@ -28,10 +28,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 告訴 Spring Security 我們要用 BCrypt 加密演算法來比對密碼
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
 }
+
+// 總結：配置系統全域安全規則，關閉 CSRF 防護、啟用 HTTP Basic 驗證，規定僅有「送出訂單」API 需登入授權，其餘路徑皆完全公開，並指定 BCrypt 作為密碼加密標準。

@@ -16,15 +16,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 1. 去資料庫找這個帳號
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("找不到使用者: " + username));
 
-        // 2. 把我們自己的 User 轉換成 Spring Security 看得懂的 UserDetails 物件
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(user.getRole()) // 設定角色權限
+                .roles(user.getRole())
                 .build();
     }
 }
+
+// 總結：從資料庫查詢指定帳號的使用者資料，若存在，則轉換為 Spring Security 看得懂的 UserDetails 物件，交由框架自動進行密碼與權限比對。s

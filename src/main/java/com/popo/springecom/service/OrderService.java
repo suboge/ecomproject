@@ -12,7 +12,8 @@ import com.popo.springecom.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.popo.springecom.config.RabbitMQConfig;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class OrderService {
     private ProductRepo productRepo;
     @Autowired
     private OrderRepo orderRepo;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Transactional
     public OrderResponse placeOrder(OrderRequest request){
@@ -59,6 +63,10 @@ public class OrderService {
 
         order.setOrderItems(orderItems);
         Order savedOrder = orderRepo.save(order);
+        String message = "新訂單已建立！訂單編號：" + savedOrder.getOrderId() + "，顧客：" + savedOrder.getCustomerName();
+        rabbitTemplate.convertAndSend(RabbitMQConfig.ORDER_QUEUE_NAME, message);
+        System.out.println("✅ 已將訂單訊息發送到 RabbitMQ！");
+
 
         List<OrderItemResponse> itemResponses = new ArrayList<>();
         for(OrderItem item : order.getOrderItems()){
